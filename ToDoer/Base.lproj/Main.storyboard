@@ -32,7 +32,14 @@
                             <outlet property="delegate" destination="HCw-cp-fjZ" id="3dm-yR-gMB"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Todoer" id="Kke-G3-qg3"/>
+                    <navigationItem key="navigationItem" title="Todoer" id="Kke-G3-qg3">
+                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="wPu-fq-vGA">
+                            <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <connections>
+                                <action selector="addButtinPressed:" destination="HCw-cp-fjZ" id="bBW-8v-uPn"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="tableView" destination="7bG-Zh-DQN" id="B0o-Li-Aod"/>
                     </connections>
