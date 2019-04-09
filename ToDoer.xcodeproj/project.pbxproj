@@ -8,12 +8,12 @@
 
 /* Begin PBXBuildFile section */
 		8403C7BF225CA85100207C2A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8403C7BE225CA85100207C2A /* AppDelegate.swift */; };
-		8403C7C1225CA85100207C2A /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8403C7C0225CA85100207C2A /* ViewController.swift */; };
 		8403C7C4225CA85100207C2A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8403C7C2225CA85100207C2A /* Main.storyboard */; };
 		8403C7C6225CA85100207C2A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8403C7C5225CA85100207C2A /* Assets.xcassets */; };
 		8403C7C9225CA85100207C2A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8403C7C7225CA85100207C2A /* LaunchScreen.storyboard */; };
 		8403C7D4225CA85200207C2A /* ToDoerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8403C7D3225CA85200207C2A /* ToDoerTests.swift */; };
 		8403C7DF225CA85200207C2A /* ToDoerUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8403C7DE225CA85200207C2A /* ToDoerUITests.swift */; };
+		842E2DF3225CBE77000331F6 /* TodoerTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 842E2DF2225CBE77000331F6 /* TodoerTableViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -36,7 +36,6 @@
 /* Begin PBXFileReference section */
 		8403C7BB225CA85100207C2A /* ToDoer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ToDoer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8403C7BE225CA85100207C2A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		8403C7C0225CA85100207C2A /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		8403C7C3225CA85100207C2A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		8403C7C5225CA85100207C2A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		8403C7C8225CA85100207C2A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -47,6 +46,7 @@
 		8403C7DA225CA85200207C2A /* ToDoerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ToDoerUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		8403C7DE225CA85200207C2A /* ToDoerUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoerUITests.swift; sourceTree = "<group>"; };
 		8403C7E0225CA85200207C2A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		842E2DF2225CBE77000331F6 /* TodoerTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoerTableViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -98,7 +98,7 @@
 			isa = PBXGroup;
 			children = (
 				8403C7BE225CA85100207C2A /* AppDelegate.swift */,
-				8403C7C0225CA85100207C2A /* ViewController.swift */,
+				842E2DF2225CBE77000331F6 /* TodoerTableViewController.swift */,
 				8403C7C2225CA85100207C2A /* Main.storyboard */,
 				8403C7C5225CA85100207C2A /* Assets.xcassets */,
 				8403C7C7225CA85100207C2A /* LaunchScreen.storyboard */,
@@ -256,7 +256,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8403C7C1225CA85100207C2A /* ViewController.swift in Sources */,
+				842E2DF3225CBE77000331F6 /* TodoerTableViewController.swift in Sources */,
 				8403C7BF225CA85100207C2A /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
