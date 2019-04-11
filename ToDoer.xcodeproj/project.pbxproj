@@ -13,7 +13,8 @@
 		8403C7C9225CA85100207C2A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8403C7C7225CA85100207C2A /* LaunchScreen.storyboard */; };
 		8403C7D4225CA85200207C2A /* ToDoerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8403C7D3225CA85200207C2A /* ToDoerTests.swift */; };
 		8403C7DF225CA85200207C2A /* ToDoerUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8403C7DE225CA85200207C2A /* ToDoerUITests.swift */; };
-		842E2DF3225CBE77000331F6 /* TodoerTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 842E2DF2225CBE77000331F6 /* TodoerTableViewController.swift */; };
+		84AA61F3225FB3F40057F966 /* TodoerTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84AA61F2225FB3F40057F966 /* TodoerTableViewController.swift */; };
+		84AA61F5225FB4140057F966 /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84AA61F4225FB4140057F966 /* Item.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -46,7 +47,8 @@
 		8403C7DA225CA85200207C2A /* ToDoerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ToDoerUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		8403C7DE225CA85200207C2A /* ToDoerUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoerUITests.swift; sourceTree = "<group>"; };
 		8403C7E0225CA85200207C2A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		842E2DF2225CBE77000331F6 /* TodoerTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoerTableViewController.swift; sourceTree = "<group>"; };
+		84AA61F2225FB3F40057F966 /* TodoerTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TodoerTableViewController.swift; sourceTree = "<group>"; };
+		84AA61F4225FB4140057F966 /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -98,10 +100,10 @@
 			isa = PBXGroup;
 			children = (
 				8403C7BE225CA85100207C2A /* AppDelegate.swift */,
-				842E2DF2225CBE77000331F6 /* TodoerTableViewController.swift */,
-				8403C7C2225CA85100207C2A /* Main.storyboard */,
-				8403C7C5225CA85100207C2A /* Assets.xcassets */,
-				8403C7C7225CA85100207C2A /* LaunchScreen.storyboard */,
+				84AA61F8225FD6C50057F966 /* Views */,
+				84AA61F6225FB4D70057F966 /* ViewModels */,
+				84AA61F7225FB4E20057F966 /* Controllers */,
+				84AA61F9225FD6D20057F966 /* SupportingFiles */,
 				8403C7CA225CA85100207C2A /* Info.plist */,
 			);
 			path = ToDoer;
@@ -123,6 +125,39 @@
 				8403C7E0225CA85200207C2A /* Info.plist */,
 			);
 			path = ToDoerUITests;
+			sourceTree = "<group>";
+		};
+		84AA61F6225FB4D70057F966 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				84AA61F4225FB4140057F966 /* Item.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		84AA61F7225FB4E20057F966 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				84AA61F2225FB3F40057F966 /* TodoerTableViewController.swift */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
+		84AA61F8225FD6C50057F966 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				8403C7C2225CA85100207C2A /* Main.storyboard */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		84AA61F9225FD6D20057F966 /* SupportingFiles */ = {
+			isa = PBXGroup;
+			children = (
+				8403C7C5225CA85100207C2A /* Assets.xcassets */,
+				8403C7C7225CA85100207C2A /* LaunchScreen.storyboard */,
+			);
+			path = SupportingFiles;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -256,8 +291,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				842E2DF3225CBE77000331F6 /* TodoerTableViewController.swift in Sources */,
 				8403C7BF225CA85100207C2A /* AppDelegate.swift in Sources */,
+				84AA61F5225FB4140057F966 /* Item.swift in Sources */,
+				84AA61F3225FB3F40057F966 /* TodoerTableViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

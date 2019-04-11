@@ -10,16 +10,30 @@ import UIKit
 
 class TodoerTableViewController: UITableViewController {
 
-    var itemsArray = ["Buy Milk", "Apply to Bosch", "Clean Drawers"]
+    var itemsArray = [Item]()
+    let userDefaults = UserDefaults.standard
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        var newItem = Item()
+        newItem.title = "Send CVs"
+        
+        var newItem1 = Item()
+        newItem1.title = "apply to companies"
+        
+        var newItem2 = Item()
+        newItem2.title = "try hacker rank"
+        
+        itemsArray.append(newItem)
+        itemsArray.append(newItem1)
+        itemsArray.append(newItem2)
+        
+        if let items = userDefaults.array(forKey: "TodoListArray") as? [Item]
+        {
+            itemsArray = items
+        }
 
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem
     }
 
     
@@ -42,7 +56,9 @@ class TodoerTableViewController: UITableViewController {
     {
 
         let toDoItem = tableView.dequeueReusableCell(withIdentifier: "TodoItemCell", for: indexPath) as UITableViewCell
-        toDoItem.textLabel?.text = itemsArray[indexPath.row]
+        toDoItem.textLabel?.text = itemsArray[indexPath.row].title
+        
+        toDoItem.accessoryType = itemsArray[indexPath.row].done ? .checkmark : .none
         
         return toDoItem
     }
@@ -54,14 +70,11 @@ class TodoerTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath)
     //-----------------------------------------------------------------------------------------------------
     {
-        if  tableView.cellForRow(at: indexPath)?.accessoryType == .checkmark
-        {
-            tableView.cellForRow(at: indexPath)?.accessoryType = .none
-        }
-        else
-        {
-            tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
-        }
+        
+        itemsArray[indexPath.row].done = !itemsArray[indexPath.row].done
+       
+        tableView.reloadData()
+        
         tableView.deselectRow(at: indexPath, animated: true)
         print(itemsArray[indexPath.row])
     }
@@ -79,8 +92,12 @@ class TodoerTableViewController: UITableViewController {
             print("success!")
             
             if itemTextField.text != "" {
-                self.itemsArray.append(itemTextField.text!)
+                
+                var newItem = Item()
+                newItem.title = itemTextField.text!
+                self.itemsArray.append(newItem)
                 self.tableView.reloadData()
+                self.userDefaults.set(self.itemsArray, forKey: "TodoListArray")
             }
         }
         alert.addTextField(configurationHandler: { (alertTextField) in
