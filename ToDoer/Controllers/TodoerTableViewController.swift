@@ -7,13 +7,15 @@
 //
 
 import UIKit
+import CoreData
 
 class TodoerTableViewController: UITableViewController {
 
     var itemsArray = [Item]()
 //    let userDefaults = UserDefaults.standard
     var userDataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("TodoItems.plist")
-    
+    let appContext = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -64,6 +66,10 @@ class TodoerTableViewController: UITableViewController {
     //-----------------------------------------------------------------------------------------------------
     {
         
+//        appContext.delete(itemsArray[indexPath.row])
+//        itemsArray.remove(at: indexPath.row)
+        
+//        itemsArray[indexPath.row].setValue(false, forKey: "done")
         itemsArray[indexPath.row].done = !itemsArray[indexPath.row].done
         saveItems()
         
@@ -86,8 +92,10 @@ class TodoerTableViewController: UITableViewController {
             
             if itemTextField.text != "" {
                 
-                var newItem = Item()
+                let newItem = Item(context: self.appContext)
                 newItem.title = itemTextField.text!
+                newItem.done = false
+
                 self.itemsArray.append(newItem)
                 
                 self.saveItems()
@@ -110,7 +118,14 @@ class TodoerTableViewController: UITableViewController {
     func saveItems()
     //-----------------------------------------------------------------------------------------------------
     {
+        do{
+        try appContext.save()
+        }catch{
+            print("Error saving data \(error)")
+        }
+        self.tableView.reloadData()
         
+        /*
         let encoder = PropertyListEncoder()
         
         do{
@@ -120,13 +135,23 @@ class TodoerTableViewController: UITableViewController {
             print("encoding error \(error)")
         }
         self.tableView.reloadData()
+         */
     }
     
     //-----------------------------------------------------------------------------------------------------
-    func loadItems()
+    
+    func loadItems(with request : NSFetchRequest<Item> = Item.fetchRequest())
     //-----------------------------------------------------------------------------------------------------
     {
-        if let data = try? Data(contentsOf: userDataFilePath!){
+        do{
+           itemsArray = try appContext.fetch(request)
+        }catch{
+            print("Error fetching data \(error)")
+        }
+        
+        tableView.reloadData()
+        
+        /*if let data = try? Data(contentsOf: userDataFilePath!){
             let decoder = PropertyListDecoder()
             
             do{
@@ -134,6 +159,42 @@ class TodoerTableViewController: UITableViewController {
             }catch{
                 print("Error decoding data \(data)")
             }
+        }*/
+    }
+}
+
+
+extension TodoerTableViewController : UISearchBarDelegate{
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        let request : NSFetchRequest<Item> = Item.fetchRequest()
+        
+        if searchBar.text?.count == 0 {
+            loadItems()
+            
+            DispatchQueue.main.async{
+                searchBar.resignFirstResponder()
+            }
+            
+        }else{
+            
+            request.predicate = NSPredicate(format: "title CONTAINS %@", searchBar.text!)
+            
+            request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
+            
+            loadItems(with: request)
         }
     }
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        
+        let request : NSFetchRequest<Item> = Item.fetchRequest()
+        
+        request.predicate = NSPredicate(format: "title CONTAINS %@", searchBar.text!)
+        
+        request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
+        
+        loadItems(with: request)
+    }
+    
 }

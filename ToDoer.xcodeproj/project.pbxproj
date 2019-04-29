@@ -14,7 +14,7 @@
 		8403C7D4225CA85200207C2A /* ToDoerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8403C7D3225CA85200207C2A /* ToDoerTests.swift */; };
 		8403C7DF225CA85200207C2A /* ToDoerUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8403C7DE225CA85200207C2A /* ToDoerUITests.swift */; };
 		84AA61F3225FB3F40057F966 /* TodoerTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84AA61F2225FB3F40057F966 /* TodoerTableViewController.swift */; };
-		84AA61F5225FB4140057F966 /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84AA61F4225FB4140057F966 /* Item.swift */; };
+		84C71B5A2276EF22006D4620 /* DataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 84C71B582276EF22006D4620 /* DataModel.xcdatamodeld */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,6 +49,7 @@
 		8403C7E0225CA85200207C2A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		84AA61F2225FB3F40057F966 /* TodoerTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TodoerTableViewController.swift; sourceTree = "<group>"; };
 		84AA61F4225FB4140057F966 /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
+		84C71B592276EF22006D4620 /* DataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DataModel.xcdatamodel; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -131,6 +132,7 @@
 			isa = PBXGroup;
 			children = (
 				84AA61F4225FB4140057F966 /* Item.swift */,
+				84C71B582276EF22006D4620 /* DataModel.xcdatamodeld */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -292,7 +294,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8403C7BF225CA85100207C2A /* AppDelegate.swift in Sources */,
-				84AA61F5225FB4140057F966 /* Item.swift in Sources */,
+				84C71B5A2276EF22006D4620 /* DataModel.xcdatamodeld in Sources */,
 				84AA61F3225FB3F40057F966 /* TodoerTableViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -622,6 +624,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		84C71B582276EF22006D4620 /* DataModel.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				84C71B592276EF22006D4620 /* DataModel.xcdatamodel */,
+			);
+			currentVersion = 84C71B592276EF22006D4620 /* DataModel.xcdatamodel */;
+			path = DataModel.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 8403C7B3225CA85100207C2A /* Project object */;
 }
