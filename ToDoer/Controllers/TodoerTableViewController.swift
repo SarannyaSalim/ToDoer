@@ -11,28 +11,21 @@ import UIKit
 class TodoerTableViewController: UITableViewController {
 
     var itemsArray = [Item]()
-    let userDefaults = UserDefaults.standard
+//    let userDefaults = UserDefaults.standard
+    var userDataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("TodoItems.plist")
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        var newItem = Item()
-        newItem.title = "Send CVs"
+        loadItems()
         
-        var newItem1 = Item()
-        newItem1.title = "apply to companies"
+//        print(userDataFilePath)
         
-        var newItem2 = Item()
-        newItem2.title = "try hacker rank"
-        
-        itemsArray.append(newItem)
-        itemsArray.append(newItem1)
-        itemsArray.append(newItem2)
-        
-        if let items = userDefaults.array(forKey: "TodoListArray") as? [Item]
-        {
-            itemsArray = items
-        }
+//        if let items = userDefaults.array(forKey: "TodoListArray") as? [Item]
+//        {
+//            itemsArray = items
+//        }
 
     }
 
@@ -72,11 +65,11 @@ class TodoerTableViewController: UITableViewController {
     {
         
         itemsArray[indexPath.row].done = !itemsArray[indexPath.row].done
-       
-        tableView.reloadData()
+        saveItems()
         
         tableView.deselectRow(at: indexPath, animated: true)
         print(itemsArray[indexPath.row])
+        
     }
 
    // MARK: - Add New Items
@@ -96,8 +89,10 @@ class TodoerTableViewController: UITableViewController {
                 var newItem = Item()
                 newItem.title = itemTextField.text!
                 self.itemsArray.append(newItem)
-                self.tableView.reloadData()
-                self.userDefaults.set(self.itemsArray, forKey: "TodoListArray")
+                
+                self.saveItems()
+                
+//                self.userDefaults.set(self.itemsArray, forKey: "TodoListArray")
             }
         }
         alert.addTextField(configurationHandler: { (alertTextField) in
@@ -107,5 +102,38 @@ class TodoerTableViewController: UITableViewController {
         alert.addAction(alertAction)
         
         present(alert, animated: true, completion: nil)
+    }
+    
+    //MARK: - Model Manipulation Methods
+    
+    //-----------------------------------------------------------------------------------------------------
+    func saveItems()
+    //-----------------------------------------------------------------------------------------------------
+    {
+        
+        let encoder = PropertyListEncoder()
+        
+        do{
+            let data = try encoder.encode(self.itemsArray)
+            try data.write(to: self.userDataFilePath!)
+        }catch{
+            print("encoding error \(error)")
+        }
+        self.tableView.reloadData()
+    }
+    
+    //-----------------------------------------------------------------------------------------------------
+    func loadItems()
+    //-----------------------------------------------------------------------------------------------------
+    {
+        if let data = try? Data(contentsOf: userDataFilePath!){
+            let decoder = PropertyListDecoder()
+            
+            do{
+                itemsArray = try decoder.decode([Item].self, from: data)
+            }catch{
+                print("Error decoding data \(data)")
+            }
+        }
     }
 }
