@@ -12,15 +12,22 @@ import CoreData
 class TodoerTableViewController: UITableViewController {
 
     var itemsArray = [Item]()
+    
 //    let userDefaults = UserDefaults.standard
-    var userDataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("TodoItems.plist")
+//    var userDataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("TodoItems.plist")
+    
     let appContext = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+    
+    var selectedCategory : Category?{
+        didSet{
+            loadItems()
+        }
+    }
 
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        loadItems()
         
 //        print(userDataFilePath)
         
@@ -30,7 +37,6 @@ class TodoerTableViewController: UITableViewController {
 //        }
 
     }
-
     
     // MARK: - Table view data source delegate methods
 
@@ -95,7 +101,7 @@ class TodoerTableViewController: UITableViewController {
                 let newItem = Item(context: self.appContext)
                 newItem.title = itemTextField.text!
                 newItem.done = false
-
+                newItem.parentCategory = self.selectedCategory
                 self.itemsArray.append(newItem)
                 
                 self.saveItems()
@@ -140,9 +146,18 @@ class TodoerTableViewController: UITableViewController {
     
     //-----------------------------------------------------------------------------------------------------
     
-    func loadItems(with request : NSFetchRequest<Item> = Item.fetchRequest())
+    func loadItems(with request : NSFetchRequest<Item> = Item.fetchRequest(), predicate : NSPredicate? = nil)
     //-----------------------------------------------------------------------------------------------------
     {
+        let categoryPredicate = NSPredicate(format: "parentCategory.name MATCHES %@", selectedCategory!.name!)
+        
+        if let additionalPredicate = predicate {
+            request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [categoryPredicate, additionalPredicate])
+        }
+        else{
+            request.predicate = categoryPredicate
+        }
+        
         do{
            itemsArray = try appContext.fetch(request)
         }catch{
@@ -178,11 +193,11 @@ extension TodoerTableViewController : UISearchBarDelegate{
             
         }else{
             
-            request.predicate = NSPredicate(format: "title CONTAINS %@", searchBar.text!)
+            let predicate = NSPredicate(format: "title CONTAINS %@", searchBar.text!)
             
             request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
             
-            loadItems(with: request)
+            loadItems(with: request, predicate : predicate)
         }
     }
     
@@ -190,11 +205,11 @@ extension TodoerTableViewController : UISearchBarDelegate{
         
         let request : NSFetchRequest<Item> = Item.fetchRequest()
         
-        request.predicate = NSPredicate(format: "title CONTAINS %@", searchBar.text!)
+        let predicate = NSPredicate(format: "title CONTAINS[cd] %@", searchBar.text!)
         
         request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
         
-        loadItems(with: request)
+        loadItems(with: request, predicate : predicate)
     }
     
 }
