@@ -7,16 +7,14 @@
 //
 
 import UIKit
-import CoreData
+import RealmSwift
 
 class TodoerTableViewController: UITableViewController {
 
-    var itemsArray = [Item]()
+    var todoItems : Results<Item>?
     
-//    let userDefaults = UserDefaults.standard
-//    var userDataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("TodoItems.plist")
+    let realm = try! Realm()
     
-    let appContext = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
     var selectedCategory : Category?{
         didSet{
@@ -28,13 +26,6 @@ class TodoerTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        
-//        print(userDataFilePath)
-        
-//        if let items = userDefaults.array(forKey: "TodoListArray") as? [Item]
-//        {
-//            itemsArray = items
-//        }
 
     }
     
@@ -46,7 +37,7 @@ class TodoerTableViewController: UITableViewController {
     //-----------------------------------------------------------------------------------------------------
     {
         // #warning Incomplete implementation, return the number of rows
-        return itemsArray.count
+        return todoItems?.count ?? 1
 
     }
 
@@ -56,12 +47,20 @@ class TodoerTableViewController: UITableViewController {
     //------------------------------------------------------------------------------------------------------
     {
 
-        let toDoItem = tableView.dequeueReusableCell(withIdentifier: "TodoItemCell", for: indexPath) as UITableViewCell
-        toDoItem.textLabel?.text = itemsArray[indexPath.row].title
+        let toDoItemCell = tableView.dequeueReusableCell(withIdentifier: "TodoItemCell", for: indexPath)
         
-        toDoItem.accessoryType = itemsArray[indexPath.row].done ? .checkmark : .none
+        if let item = todoItems?[indexPath.row]{
+            
+            toDoItemCell.textLabel?.text = item.title
+            
+            toDoItemCell.accessoryType = item.done ? .checkmark : .none
+        }
+        else{
+            toDoItemCell.textLabel?.text = "No Item Added Yet"
+        }
         
-        return toDoItem
+        
+        return toDoItemCell
     }
     
     
@@ -72,15 +71,19 @@ class TodoerTableViewController: UITableViewController {
     //-----------------------------------------------------------------------------------------------------
     {
         
-//        appContext.delete(itemsArray[indexPath.row])
-//        itemsArray.remove(at: indexPath.row)
-        
-//        itemsArray[indexPath.row].setValue(false, forKey: "done")
-        itemsArray[indexPath.row].done = !itemsArray[indexPath.row].done
-        saveItems()
+        if let item = todoItems?[indexPath.row]{
+            do{
+                try realm.write {
+//                    realm.delete(item)
+                    item.done = !item.done
+                }
+            }catch{
+                print("error changing done statuc \(error)")
+            }
+        }
+        tableView.reloadData()
         
         tableView.deselectRow(at: indexPath, animated: true)
-        print(itemsArray[indexPath.row])
         
     }
 
@@ -98,15 +101,22 @@ class TodoerTableViewController: UITableViewController {
             
             if itemTextField.text != "" {
                 
-                let newItem = Item(context: self.appContext)
-                newItem.title = itemTextField.text!
-                newItem.done = false
-                newItem.parentCategory = self.selectedCategory
-                self.itemsArray.append(newItem)
                 
-                self.saveItems()
+                if let currentCategory = self.selectedCategory{
+                    do{
+                        try self.realm.write {
+                            let item = Item()
+                            item.title = itemTextField.text!
+                            item.done = false
+                            item.dateCreated = Date()
+                            currentCategory.items.append(item)
+                        }
+                    }catch{
+                        print("Error saving data \(error)")
+                    }
+                }
                 
-//                self.userDefaults.set(self.itemsArray, forKey: "TodoListArray")
+                self.tableView.reloadData()
             }
         }
         alert.addTextField(configurationHandler: { (alertTextField) in
@@ -120,96 +130,44 @@ class TodoerTableViewController: UITableViewController {
     
     //MARK: - Model Manipulation Methods
     
-    //-----------------------------------------------------------------------------------------------------
-    func saveItems()
-    //-----------------------------------------------------------------------------------------------------
-    {
-        do{
-        try appContext.save()
-        }catch{
-            print("Error saving data \(error)")
-        }
-        self.tableView.reloadData()
-        
-        /*
-        let encoder = PropertyListEncoder()
-        
-        do{
-            let data = try encoder.encode(self.itemsArray)
-            try data.write(to: self.userDataFilePath!)
-        }catch{
-            print("encoding error \(error)")
-        }
-        self.tableView.reloadData()
-         */
-    }
     
     //-----------------------------------------------------------------------------------------------------
     
-    func loadItems(with request : NSFetchRequest<Item> = Item.fetchRequest(), predicate : NSPredicate? = nil)
+    func loadItems()
     //-----------------------------------------------------------------------------------------------------
     {
-        let categoryPredicate = NSPredicate(format: "parentCategory.name MATCHES %@", selectedCategory!.name!)
-        
-        if let additionalPredicate = predicate {
-            request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [categoryPredicate, additionalPredicate])
-        }
-        else{
-            request.predicate = categoryPredicate
-        }
-        
-        do{
-           itemsArray = try appContext.fetch(request)
-        }catch{
-            print("Error fetching data \(error)")
-        }
-        
+        todoItems = selectedCategory?.items.sorted(byKeyPath: "dateCreated", ascending: true)
         tableView.reloadData()
-        
-        /*if let data = try? Data(contentsOf: userDataFilePath!){
-            let decoder = PropertyListDecoder()
-            
-            do{
-                itemsArray = try decoder.decode([Item].self, from: data)
-            }catch{
-                print("Error decoding data \(data)")
-            }
-        }*/
     }
 }
 
 
 extension TodoerTableViewController : UISearchBarDelegate{
-    
+
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        let request : NSFetchRequest<Item> = Item.fetchRequest()
-        
+
         if searchBar.text?.count == 0 {
             loadItems()
-            
+
             DispatchQueue.main.async{
                 searchBar.resignFirstResponder()
             }
-            
+
         }else{
+
+            todoItems = todoItems?.filter("title CONTAINS[cd] %@", searchBar.text!).sorted(byKeyPath: "dateCreated", ascending: true)
             
-            let predicate = NSPredicate(format: "title CONTAINS %@", searchBar.text!)
-            
-            request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
-            
-            loadItems(with: request, predicate : predicate)
+            tableView.reloadData()
+
         }
     }
-    
+
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         
-        let request : NSFetchRequest<Item> = Item.fetchRequest()
+        todoItems = todoItems?.filter("title CONTAINS[cd] %@", searchBar.text!).sorted(byKeyPath: "dateCreated", ascending: true)
         
-        let predicate = NSPredicate(format: "title CONTAINS[cd] %@", searchBar.text!)
-        
-        request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
-        
-        loadItems(with: request, predicate : predicate)
+        tableView.reloadData()
     }
     
 }
+
