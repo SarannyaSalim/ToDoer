@@ -7,15 +7,14 @@
 //
 
 import UIKit
-import CoreData
 import RealmSwift
+import SwipeCellKit
+import ChameleonFramework
 
-
-class TDCategoryViewController: UITableViewController {
+class TDCategoryViewController: SwipeTableViewController {
 
     let realm = try! Realm()
     
-    let appContext = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
     var categoriesList : Results<Category>?
     
@@ -40,8 +39,14 @@ class TDCategoryViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
        
-        let cell = tableView.dequeueReusableCell(withIdentifier: "TodoCategory", for: indexPath)
+        let cell = super.tableView(tableView, cellForRowAt: indexPath)
+        
         cell.textLabel?.text = categoriesList?[indexPath.row].name ?? "No category added yet"
+       
+        cell.backgroundColor = UIColor(hexString: (categoriesList?[indexPath.row].cellColor) ?? "AAAAAA")
+        cell.textLabel?.textColor = ContrastColorOf(cell.backgroundColor!, returnFlat: true)
+
+
         return cell
     }
     
@@ -77,7 +82,7 @@ class TDCategoryViewController: UITableViewController {
                 let newCategory = Category()
                 newCategory.name = textField.text!
 //                self.categoriesList.append(newCategory)
-                
+                newCategory.cellColor = UIColor.randomFlat.hexValue()
                 self.save(category: newCategory)
             }
         }
@@ -112,4 +117,18 @@ class TDCategoryViewController: UITableViewController {
         
         tableView.reloadData()
     }
+    
+    override func deleteRow(at indexPath: IndexPath) {
+        if let categoryFordeletion = self.categoriesList?[indexPath.row]{
+            do{
+                try self.realm.write {
+                    self.realm.delete(categoryFordeletion)
+                }
+            }catch{
+                print("error deleting category \(error)")
+            }
+        }
+        
+    }
 }
+

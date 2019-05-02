@@ -8,9 +8,12 @@
 
 import UIKit
 import RealmSwift
+import ChameleonFramework
 
-class TodoerTableViewController: UITableViewController {
+class TodoerTableViewController: SwipeTableViewController {
 
+    @IBOutlet weak var searchBar: UISearchBar!
+    
     var todoItems : Results<Item>?
     
     let realm = try! Realm()
@@ -26,9 +29,35 @@ class TodoerTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-
+        tableView.separatorStyle = .none
+        
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+    
+        title = selectedCategory!.name
+        guard let colorHex = selectedCategory?.cellColor else {
+            fatalError()
+        }
+        
+        setNavBarcColor(with: colorHex)
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        
+        setNavBarcColor(with: "AAAAAA")
+    }
+    
+    func setNavBarcColor(with hexcode : String){
+        
+        guard let navBar =  navigationController?.navigationBar else {
+            fatalError("Navigation bar doesnot exists")
+        }
+        guard let navBarColor =  UIColor(hexString: hexcode) else {fatalError()}
+        searchBar.barTintColor = navBarColor
+        navBar.barTintColor = navBarColor
+        navBar.tintColor = ContrastColorOf(navBarColor, returnFlat: true)
+    }
     // MARK: - Table view data source delegate methods
 
 
@@ -47,13 +76,22 @@ class TodoerTableViewController: UITableViewController {
     //------------------------------------------------------------------------------------------------------
     {
 
-        let toDoItemCell = tableView.dequeueReusableCell(withIdentifier: "TodoItemCell", for: indexPath)
+        let toDoItemCell = super.tableView(tableView, cellForRowAt: indexPath)
         
         if let item = todoItems?[indexPath.row]{
             
             toDoItemCell.textLabel?.text = item.title
             
             toDoItemCell.accessoryType = item.done ? .checkmark : .none
+            
+            //setting gradient color depending on the parent category
+            
+            if let color = UIColor(hexString: selectedCategory!.cellColor){
+                
+                toDoItemCell.backgroundColor = color.darken(byPercentage: CGFloat(indexPath.row) / CGFloat(todoItems!.count))
+                toDoItemCell.textLabel?.textColor = ContrastColorOf(toDoItemCell.backgroundColor!, returnFlat: true)
+            }
+            
         }
         else{
             toDoItemCell.textLabel?.text = "No Item Added Yet"
@@ -138,6 +176,20 @@ class TodoerTableViewController: UITableViewController {
     {
         todoItems = selectedCategory?.items.sorted(byKeyPath: "dateCreated", ascending: true)
         tableView.reloadData()
+    }
+    
+    override func deleteRow(at indexPath: IndexPath) {
+        
+        if let item = todoItems?[indexPath.row]{
+            
+            do{
+                try realm.write {
+                    realm.delete(item)
+                }
+            }catch{
+                print("error deleting todo iteme \(error)")
+            }
+        }
     }
 }
 

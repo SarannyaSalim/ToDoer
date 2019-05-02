@@ -6,7 +6,9 @@ target 'ToDoer' do
   # Pods for ToDoer
     use_frameworks!
     pod 'RealmSwift'
-
+    pod 'SwipeCellKit', '2.5.4'
+    pod 'ChameleonFramework/Swift'
+    
   target 'ToDoerTests' do
     inherit! :search_paths
     # Pods for testing
